@@ -17,7 +17,8 @@ class DB:
                         User_id INTEGER UNIQUE,
                         Active INTEGER DEFAULT True, 
                         User_name TEXT,
-                        User_tg TEXT)"""
+                        User_tg TEXT,
+                        Phone TEXT)"""
             cursor.execute(users)
 
     def check_user(self, user_id):
@@ -30,5 +31,12 @@ class DB:
     def add_user(self, data):
         with sqlite3.connect(self.db_path) as db_connect:
             cursor = db_connect.cursor()
-            query = 'INSERT INTO Users(User_id, Active, User_name, User_tg) VALUES(?,?,?,?)'
+            query = 'INSERT INTO Users(User_id, Active, User_name, User_tg, Phone) VALUES(?,?,?,?,?)'
             cursor.execute(query, data)
+
+    def get_user(self, data):
+        with sqlite3.connect(self.db_path) as db_connect:
+            cursor = db_connect.cursor()
+            query = 'SELECT * FROM Users WHERE Phone=? or User_tg=?'
+            cursor.execute(query, data)
+            return cursor.fetchone()
