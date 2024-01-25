@@ -54,7 +54,7 @@ async def handle_docs(msg: types.Message):
 
         file_path = file_info.file_path
         date = datetime.now().date().strftime('%m-%Y')
-        await bot.download_file(file_path, destination=f'media/{date}/{document.file_name}')
+        await bot.download_file(file_path, destination=f'media/{date}/{document.file_name}'.encode('utf-8'))
 
 
 if __name__ == "__main__":
