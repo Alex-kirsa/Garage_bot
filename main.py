@@ -1,21 +1,25 @@
+import asyncio
+
 from aiogram import types
 from aiogram.utils import executor
 from datetime import datetime
 import admin
-from conf import dp, bot, ADMIN
-from db import DB
-from until import text
-from until import buttons
+import user
+from LiqPay.checker import checker
+from config.conf import dp, bot, ADMIN
+from db.db import DB
+from utils.utils import texts
+from utils.utils import buttons
 
 base = DB()
 
 
-async def welcome(msg: types.Message):
+async def welcome(msg: types.Message | types.CallbackQuery):
     keyboard = types.InlineKeyboardMarkup(row_width=2)
-    keyboard.add(buttons.get('number_security'), buttons.get('help_center'))
+    keyboard.add(buttons.get('balance'), buttons.get('service'))
     if msg.from_user.id == int(ADMIN):
         keyboard.add(buttons.get('mailing'))
-    await bot.send_message(msg.from_user.id, text.get('welcome'), reply_markup=keyboard)
+    await bot.send_message(msg.from_user.id, texts.get('welcome'), reply_markup=keyboard)
 
 
 @dp.message_handler(commands=["start"])
@@ -25,7 +29,12 @@ async def check_membership(msg: types.Message):
     else:
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         keyboard.add(buttons.get('send_phone'))
-        await msg.answer(text.get('send_phone'), reply_markup=keyboard)
+        await msg.answer(texts.get('send_phone'), reply_markup=keyboard)
+
+
+@dp.callback_query_handler(text=buttons.get('menu').callback_data)
+async def service(call: types.CallbackQuery):
+    await welcome(call)
 
 
 @dp.message_handler(content_types=['contact'])
@@ -50,4 +59,6 @@ async def handle_docs(msg: types.Message):
 
 if __name__ == "__main__":
     base.init_table()
+    loop = asyncio.get_event_loop()
+    loop.create_task(checker())
     executor.start_polling(dp, skip_updates=True)
