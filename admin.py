@@ -28,7 +28,7 @@ async def admin(call: types.CallbackQuery):
                 web_app_button = InlineKeyboardButton(text="Открыть веб-приложение",
                                                       web_app=WebAppInfo(url=link))
                 keyboard.add(web_app_button)
-                with open(f'media/{date}/{sheets_user[0]}.pdf', 'rb') as file:
+                with open(f'media/{date}/{sheets_user[0]}.pdf', 'rb', encoding='utf-8') as file:
                     await bot.send_document(user[1], file,
                                             caption=f'{sheets_user[6]}\n[Оплатити за посиланням]({link})',
                                             parse_mode='MarkdownV2', reply_markup=keyboard)

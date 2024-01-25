@@ -14,7 +14,7 @@ from utils.utils import buttons
 base = DB()
 
 
-async def welcome(msg: types.Message | types.CallbackQuery):
+async def welcome(msg: types.Message):
     keyboard = types.InlineKeyboardMarkup(row_width=2)
     keyboard.add(buttons.get('balance'), buttons.get('service'))
     if msg.from_user.id == int(ADMIN):
